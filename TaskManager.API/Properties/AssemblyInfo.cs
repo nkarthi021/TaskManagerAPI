@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TaskManger.API")]
+[assembly: AssemblyTitle("TaskManager.API")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TaskManger.API")]
+[assembly: AssemblyProduct("TaskManager.API")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("357754f5-f237-47e2-b5e9-db0f3d5d8a07")]
+[assembly: Guid("7aef5800-0fd7-4ca0-99aa-f4ad407493ee")]
 
 // Version information for an assembly consists of the following four values:
 //

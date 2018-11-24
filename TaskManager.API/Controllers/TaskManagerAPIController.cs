@@ -8,7 +8,7 @@ using TaskManager.BusinessLayer;
 using TaskManager.BusinessLayer.Model;
 using TaskManager.DataLayer;
 
-namespace TaskManger.API.Controllers
+namespace TaskManager.API.Controllers
 {
     public class TaskManagerAPIController : ApiController
     {
@@ -78,12 +78,12 @@ namespace TaskManger.API.Controllers
 
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return "Error";
             }
-               
-           
+
+
         }
     }
 }
