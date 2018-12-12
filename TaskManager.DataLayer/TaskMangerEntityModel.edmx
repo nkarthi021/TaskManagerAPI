@@ -5,56 +5,230 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="TaskManagerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Tasks">
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="Project_Id" />
+          </Key>
+          <Property Name="Project_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Start_Date" Type="date" />
+          <Property Name="End_Date" Type="date" />
+          <Property Name="Priority" Type="int" />
+          <Property Name="Manager_Id" Type="int" />
+        </EntityType>
+        <EntityType Name="Task">
           <Key>
             <PropertyRef Name="Task_Id" />
           </Key>
           <Property Name="Task_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Parent_Id" Type="int" />
-          <Property Name="Task" Type="varchar" MaxLength="100" />
-          <Property Name="Start_Date" Type="date" />
-          <Property Name="End_Date" Type="date" />
-          <Property Name="Priority" Type="int" />
-          <Property Name="EditFlag" Type="bit" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Start_Date" Type="date" Nullable="false" />
+          <Property Name="End_Date" Type="date" Nullable="false" />
+          <Property Name="Priority" Type="int" Nullable="false" />
+          <Property Name="Edit_Flag" Type="bit" Nullable="false" />
+          <Property Name="User_Id" Type="int" Nullable="false" />
+          <Property Name="Project_Id" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="User_Id" />
+          </Key>
+          <Property Name="User_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="First_Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Last_Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Manager_Flag" Type="bit" />
+        </EntityType>
+        <Association Name="FK__Project__Manager__29572725">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="User_Id" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="Manager_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Task__Project_Id__2D27B809">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="Task" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Project_Id" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="Project_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Task__User_Id__2C3393D0">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Task" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="User_Id" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="TaskManagerModelStoreContainer">
-          <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Task" EntityType="Self.Task" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Project__Manager__29572725" Association="Self.FK__Project__Manager__29572725">
+            <End Role="User" EntitySet="User" />
+            <End Role="Project" EntitySet="Project" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Task__Project_Id__2D27B809" Association="Self.FK__Task__Project_Id__2D27B809">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Task__User_Id__2C3393D0" Association="Self.FK__Task__User_Id__2C3393D0">
+            <End Role="User" EntitySet="User" />
+            <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TaskManagerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TaskManagerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Projects" EntityType="TaskManagerModel.Project" />
+          <EntitySet Name="Tasks" EntityType="TaskManagerModel.Task" />
+          <EntitySet Name="Users" EntityType="TaskManagerModel.User" />
+          <AssociationSet Name="FK__Project__Manager__29572725" Association="TaskManagerModel.FK__Project__Manager__29572725">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Project" EntitySet="Projects" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Task__Project_Id__2D27B809" Association="TaskManagerModel.FK__Task__Project_Id__2D27B809">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="Task" EntitySet="Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Task__User_Id__2C3393D0" Association="TaskManagerModel.FK__Task__User_Id__2C3393D0">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Task" EntitySet="Tasks" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="Project_Id" />
+          </Key>
+          <Property Name="Project_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Start_Date" Type="DateTime" Precision="0" />
+          <Property Name="End_Date" Type="DateTime" Precision="0" />
+          <Property Name="Priority" Type="Int32" />
+          <Property Name="Manager_Id" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="TaskManagerModel.FK__Project__Manager__29572725" FromRole="Project" ToRole="User" />
+          <NavigationProperty Name="Tasks" Relationship="TaskManagerModel.FK__Task__Project_Id__2D27B809" FromRole="Project" ToRole="Task" />
+        </EntityType>
         <EntityType Name="Task">
           <Key>
             <PropertyRef Name="Task_Id" />
           </Key>
           <Property Name="Task_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Parent_Id" Type="Int32" />
-          <Property Name="Task1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Start_Date" Type="DateTime" Precision="0" />
-          <Property Name="End_Date" Type="DateTime" Precision="0" />
-          <Property Name="Priority" Type="Int32" />
-          <Property Name="EditFlag" Type="Boolean" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Start_Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="End_Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Priority" Type="Int32" Nullable="false" />
+          <Property Name="Edit_Flag" Type="Boolean" Nullable="false" />
+          <Property Name="User_Id" Type="Int32" Nullable="false" />
+          <Property Name="Project_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Project" Relationship="TaskManagerModel.FK__Task__Project_Id__2D27B809" FromRole="Task" ToRole="Project" />
+          <NavigationProperty Name="User" Relationship="TaskManagerModel.FK__Task__User_Id__2C3393D0" FromRole="Task" ToRole="User" />
         </EntityType>
-        <EntityContainer Name="TaskManagerEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Tasks" EntityType="Self.Task" />
-        </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="User_Id" />
+          </Key>
+          <Property Name="User_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="First_Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Last_Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Manager_Flag" Type="Boolean" />
+          <NavigationProperty Name="Projects" Relationship="TaskManagerModel.FK__Project__Manager__29572725" FromRole="User" ToRole="Project" />
+          <NavigationProperty Name="Tasks" Relationship="TaskManagerModel.FK__Task__User_Id__2C3393D0" FromRole="User" ToRole="Task" />
+        </EntityType>
+        <Association Name="FK__Project__Manager__29572725">
+          <End Type="TaskManagerModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="TaskManagerModel.Project" Role="Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="User_Id" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="Manager_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Task__Project_Id__2D27B809">
+          <End Type="TaskManagerModel.Project" Role="Project" Multiplicity="1" />
+          <End Type="TaskManagerModel.Task" Role="Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Project_Id" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="Project_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Task__User_Id__2C3393D0">
+          <End Type="TaskManagerModel.User" Role="User" Multiplicity="1" />
+          <End Type="TaskManagerModel.Task" Role="Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="User_Id" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="TaskManagerModelStoreContainer" CdmEntityContainer="TaskManagerEntities">
+          <EntitySetMapping Name="Projects">
+            <EntityTypeMapping TypeName="TaskManagerModel.Project">
+              <MappingFragment StoreEntitySet="Project">
+                <ScalarProperty Name="Manager_Id" ColumnName="Manager_Id" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="End_Date" ColumnName="End_Date" />
+                <ScalarProperty Name="Start_Date" ColumnName="Start_Date" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Project_Id" ColumnName="Project_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Tasks">
             <EntityTypeMapping TypeName="TaskManagerModel.Task">
-              <MappingFragment StoreEntitySet="Tasks">
-                <ScalarProperty Name="EditFlag" ColumnName="EditFlag" />
-                <ScalarProperty Name="Task_Id" ColumnName="Task_Id" />
-                <ScalarProperty Name="Parent_Id" ColumnName="Parent_Id" />
-                <ScalarProperty Name="Task1" ColumnName="Task" />
-                <ScalarProperty Name="Start_Date" ColumnName="Start_Date" />
-                <ScalarProperty Name="End_Date" ColumnName="End_Date" />
+              <MappingFragment StoreEntitySet="Task">
+                <ScalarProperty Name="Project_Id" ColumnName="Project_Id" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="Edit_Flag" ColumnName="Edit_Flag" />
                 <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="End_Date" ColumnName="End_Date" />
+                <ScalarProperty Name="Start_Date" ColumnName="Start_Date" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Parent_Id" ColumnName="Parent_Id" />
+                <ScalarProperty Name="Task_Id" ColumnName="Task_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="TaskManagerModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Manager_Flag" ColumnName="Manager_Flag" />
+                <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
+                <ScalarProperty Name="First_Name" ColumnName="First_Name" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

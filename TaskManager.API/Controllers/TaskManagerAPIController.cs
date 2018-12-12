@@ -10,48 +10,58 @@ using TaskManager.DataLayer;
 
 namespace TaskManager.API.Controllers
 {
-    public class TaskManagerAPIController : ApiController
+    public class TaskController : ApiController
     {
-        [Route("api/TaskManagerAPI/GetTasks")]
+        [Route("api/Task/GetTaskDetails")]
         [HttpGet]
-        public List<TaskDetails> GetTasks()
+        public List<TaskDetails> GetTaskDetails()
         {
             TaskMangerBusinessModel taskManagerBusinessModel = new TaskMangerBusinessModel();
             return taskManagerBusinessModel.GetTaskDetails();
         }
 
-        [Route("api/TaskManagerAPI/GetTask")]
+        [Route("api/Task/GetTask")]
         [HttpGet]
-        public Task GetTaskbyId(int TaskId)
+        public TaskModel GetTaskbyId(int TaskId)
         {
             TaskMangerBusinessModel taskManagerBusinessModel = new TaskMangerBusinessModel();
 
             return taskManagerBusinessModel.GetTaskById(TaskId);
         }
 
-        [Route("api/TaskManagerAPI/GetParentTask")]
+        [Route("api/Task/GetTasks")]
         [HttpGet]
-        public List<ParentTask> GetParentTask(int? TaskId)
+        public List<ParentTask> GetTasks(int? TaskId)
         {
             TaskMangerBusinessModel taskManagerBusinessModel = new TaskMangerBusinessModel();
 
-            return taskManagerBusinessModel.GetParentTask(TaskId);
+            return taskManagerBusinessModel.GetTasks(TaskId);
         }
 
-        [Route("api/TaskManagerAPI/Create")]
+        [Route("api/Task/Create")]
         [HttpPost]
         public string Create(Task task)
         {
-            if (ModelState.IsValid)
+            try
             {
-                TaskMangerBusinessModel taskManagerBusinessModel = new TaskMangerBusinessModel();
-                taskManagerBusinessModel.Create(task);
-                return "Success";
+                if (ModelState.IsValid)
+                {
+                    TaskMangerBusinessModel taskManagerBusinessModel = new TaskMangerBusinessModel();
+                    taskManagerBusinessModel.Create(task);
+                    return "Success";
+                }
+                else return "Failure";
             }
-            else return "Failure";
+
+            catch (Exception ex)
+            {
+                return "Failure";
+            }
+           
+            
         }
 
-        [Route("api/TaskManagerAPI/Update")]
+        [Route("api/Task/Update")]
         [HttpPost]
         public string Update(Task task)
         {
@@ -65,7 +75,7 @@ namespace TaskManager.API.Controllers
             else return "Failure";
         }
 
-        [Route("api/TaskManagerAPI/UpdateEditFlag")]
+        [Route("api/Task/UpdateEditFlag")]
         [HttpPost]
         public string UpdateEditFlag(int TaskId, bool EditFlag)
         {

@@ -18,23 +18,45 @@ namespace TaskManager.BusinessLayer
             var TaskDetails = (from task in taskmanagerEntities.Tasks
                                join parenttask in taskmanagerEntities.Tasks on task.Parent_Id equals parenttask.Task_Id into tGroup
                                from parenttask in tGroup.DefaultIfEmpty()
-                               select new TaskDetails { TaskId = task.Task_Id, Task = task.Task1, ParentTask = parenttask.Task1 != null ? parenttask.Task1 : "", Priority = task.Priority, StartDate = task.Start_Date.ToString(), EndDate = task.End_Date.ToString(), EditFlag = task.EditFlag }).ToList<TaskDetails>();
+                               join projects in taskmanagerEntities.Projects on task.Project_Id equals projects.Project_Id into pGroup
+                               from projects in pGroup.DefaultIfEmpty()
+                               join users in taskmanagerEntities.Users on task.User_Id equals users.User_Id into uGroup
+                               from users in uGroup.DefaultIfEmpty()
+                               select new TaskDetails {
+                                   TaskId = task.Task_Id, Task = task.Name, ParentTask = parenttask.Name != null ? parenttask.Name : "", Priority = task.Priority, StartDate = task.Start_Date.ToString(),
+                                   EndDate = task.End_Date.ToString(), EditFlag = task.Edit_Flag, Project = projects.Name, User = users.First_Name
+                               }).ToList<TaskDetails>();
             return TaskDetails;
         }
 
-        public Task GetTaskById(int TaskId)
+        public TaskModel GetTaskById(int TaskId)
         {
             TaskManagerEntities taskmanagerEntities = new TaskManagerEntities();
 
-            return taskmanagerEntities.Tasks.FirstOrDefault(x => x.Task_Id == TaskId);
+            var Task = (from task in taskmanagerEntities.Tasks
+                    where task.Task_Id == TaskId
+                    select new TaskModel()
+                    {
+                        Task_Id = task.Task_Id,
+                        Name = task.Name,
+                        Parent_Id = task.Parent_Id,
+                        Start_Date = task.Start_Date,
+                        End_Date = task.End_Date,
+                        Edit_Flag = task.Edit_Flag,
+                        Priority = task.Priority,
+                        Project_Id = task.Project_Id,
+                        User_Id = task.User_Id
+                    }).FirstOrDefault();
+
+            return Task;
         }
 
-        public List<ParentTask> GetParentTask(int? TaskId)
+        public List<ParentTask> GetTasks(int? TaskId)
         {
             TaskManagerEntities taskmanagerEntities = new TaskManagerEntities();
 
             var ParentTasks = (from task in taskmanagerEntities.Tasks
-                               select new ParentTask() { Task = task.Task1, TaskId = task.Task_Id }).ToList<ParentTask>();
+                               select new ParentTask() { Task = task.Name, TaskId = task.Task_Id }).ToList<ParentTask>();
 
             ParentTasks.Add(new ParentTask() { Task = "Select", TaskId = 0 });
 
@@ -56,11 +78,13 @@ namespace TaskManager.BusinessLayer
             TaskManagerEntities taskmanagerEntities = new TaskManagerEntities();
 
             var UpdatedTasks = taskmanagerEntities.Tasks.Where(x => x.Task_Id == task.Task_Id).FirstOrDefault();
-            UpdatedTasks.Task1 = task.Task1;
+            UpdatedTasks.Name = task.Name;
             UpdatedTasks.Parent_Id = task.Parent_Id;
             UpdatedTasks.Priority = task.Priority;
             UpdatedTasks.Start_Date = task.Start_Date;
             UpdatedTasks.End_Date = task.End_Date;
+            UpdatedTasks.User_Id = task.Project_Id;
+            UpdatedTasks.Project_Id = task.Project_Id;
 
             taskmanagerEntities.SaveChanges();
 
@@ -71,7 +95,7 @@ namespace TaskManager.BusinessLayer
             TaskManagerEntities taskmanagerEntities = new TaskManagerEntities();
 
             var UpdatedTasks = taskmanagerEntities.Tasks.Where(x => x.Task_Id == TaskId).FirstOrDefault();
-            UpdatedTasks.EditFlag = EditFlag;
+            UpdatedTasks.Edit_Flag = EditFlag;
 
             taskmanagerEntities.SaveChanges();
 
