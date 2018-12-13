@@ -74,7 +74,7 @@ namespace TaskManager.API.Controllers
             else return "Failure";
         }
 
-        [Route("api/User/UpdateEditFlag")]
+        [Route("api/User/Delete")]
         [HttpPost]
         public string Delete(int UserId)
         {

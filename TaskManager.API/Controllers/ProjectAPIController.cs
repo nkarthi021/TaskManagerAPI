@@ -66,7 +66,7 @@ namespace TaskManager.API.Controllers
             else return "Failure";
         }
 
-        [Route("api/Project/UpdateEditFlag")]
+        [Route("api/Project/Delete")]
         [HttpPost]
         public string Delete(int ProjectId)
         {
