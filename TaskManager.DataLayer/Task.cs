@@ -17,9 +17,9 @@ namespace TaskManager.DataLayer
         public int Task_Id { get; set; }
         public Nullable<int> Parent_Id { get; set; }
         public string Name { get; set; }
-        public System.DateTime Start_Date { get; set; }
-        public System.DateTime End_Date { get; set; }
-        public int Priority { get; set; }
+        public Nullable<System.DateTime> Start_Date { get; set; }
+        public Nullable<System.DateTime> End_Date { get; set; }
+        public Nullable<int> Priority { get; set; }
         public bool Edit_Flag { get; set; }
         public int User_Id { get; set; }
         public int Project_Id { get; set; }

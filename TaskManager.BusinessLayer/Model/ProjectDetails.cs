@@ -10,9 +10,10 @@ namespace TaskManager.BusinessLayer.Model
     {
         public int ProjectId { get; set; }
         public string Name { get; set; }
+        public Nullable<int> Priority { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
-        public Nullable<int> ManagerId { get; set; }
+        public string Manager { get; set; }
     }
 
     public class Projects

@@ -16,11 +16,11 @@ namespace TaskManager.BusinessLayer
             //taskmanagerEntities.Configuration.ProxyCreationEnabled = false;
             var userList = (from user in taskmanagerEntities.Users
                             select new UserDetails
-                               {
-                                   UserId = user.User_Id,
-                                   FirstName = user.First_Name,
-                                   LastName = user.Last_Name,
-                                   ManagerFlag = user.Manager_Flag
+                            {
+                                UserId = user.User_Id,
+                                FirstName = user.First_Name,
+                                LastName = user.Last_Name,
+                                Manager = user.Manager_Flag == true ? "Manager" : "Not Manager"
 
                                }).ToList<UserDetails>();
             return userList;

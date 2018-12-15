@@ -23,8 +23,15 @@ namespace TaskManager.BusinessLayer
                                join users in taskmanagerEntities.Users on task.User_Id equals users.User_Id into uGroup
                                from users in uGroup.DefaultIfEmpty()
                                select new TaskDetails {
-                                   TaskId = task.Task_Id, Task = task.Name, ParentTask = parenttask.Name != null ? parenttask.Name : "", Priority = task.Priority, StartDate = task.Start_Date.ToString(),
-                                   EndDate = task.End_Date.ToString(), EditFlag = task.Edit_Flag, Project = projects.Name, User = users.First_Name
+                                   TaskId = task.Task_Id,
+                                   Task = task.Name,
+                                   ParentTask = parenttask.Name != null ? parenttask.Name : "",
+                                   Priority = task.Parent_Id !=null ? parenttask.Priority : task.Priority,
+                                   StartDate = task.Parent_Id != null ? task.Start_Date.ToString() : task.Start_Date.ToString(),
+                                   EndDate = task.Parent_Id != null ? task.End_Date.ToString() : task.End_Date.ToString(),
+                                   EditFlag = task.Edit_Flag,
+                                   Project = projects.Name,
+                                   User = users.First_Name
                                }).ToList<TaskDetails>();
             return TaskDetails;
         }

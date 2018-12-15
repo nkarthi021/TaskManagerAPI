@@ -11,7 +11,7 @@ namespace TaskManager.BusinessLayer.Model
         public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public Nullable<bool> ManagerFlag { get; set; }
+        public string Manager { get; set; }
 
 
     }

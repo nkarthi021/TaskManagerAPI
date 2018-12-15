@@ -21,9 +21,10 @@ namespace TaskManager.BusinessLayer
                                {
                                    ProjectId = project.Project_Id,
                                    Name = project.Name,
+                                   Priority = project.Priority,
                                    StartDate = project.Start_Date.ToString(),
                                    EndDate = project.End_Date.ToString(),
-                                   ManagerId = project.Manager_Id
+                                   Manager = users.First_Name
 
                                }).ToList<ProjectDetails>();
             return projectList;
