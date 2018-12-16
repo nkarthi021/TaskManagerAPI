@@ -65,6 +65,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\ProjectAPITestController.cs" />
+    <Compile Include="Controller\UserAPITestController.cs" />
     <Compile Include="Controller\TaskManagerAPITestController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

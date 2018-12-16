@@ -21,10 +21,9 @@ namespace TaskManager.API.Tests.Controller
             TaskManagerEntities entity = new TaskManagerEntities();
             var ActualResult = entity.Tasks.ToList();
 
+            TaskController controller = new TaskController();
 
-            TaskManagerAPIController controller = new TaskManagerAPIController();
-
-            var APIResult = controller.GetTasks();
+            var APIResult = controller.GetTaskDetails();
 
             //Assert.IsNotNull(APIResult);
             Assert.AreEqual(ActualResult.Count(), APIResult.Count());
@@ -34,17 +33,19 @@ namespace TaskManager.API.Tests.Controller
         public void CreateTask_TaskShouldBeAdded()
         {
             TaskManager.DataLayer.Task task = new TaskManager.DataLayer.Task();
-            task.Task1 = "Test Task";
+            task.Name = "Test Task";
             task.Parent_Id = 0;
             task.Priority = 14;
             task.Start_Date = Convert.ToDateTime("01-02-2018");
             task.End_Date = Convert.ToDateTime("04-02-2018");
-            task.EditFlag = true;
+            task.Edit_Flag = true;
+            task.User_Id = 1;
+            task.Project_Id = 1;
 
-            TaskManagerAPIController controller = new TaskManagerAPIController();
+            TaskController controller = new TaskController();
             controller.Create(task);
 
-            var result = controller.GetTasks().Where(x => x.Task == "Test Task").FirstOrDefault();
+            var result = controller.GetTaskDetails().Where(x => x.Task == "Test Task").FirstOrDefault();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(result.Task, "Test Task");
@@ -55,7 +56,7 @@ namespace TaskManager.API.Tests.Controller
         public void GetTaskById_ShouldReturnCorrentTask()
         {
             TaskManagerEntities taskManagerEntities = new TaskManagerEntities();
-            TaskManagerAPIController controller = new TaskManagerAPIController();
+            TaskController controller = new TaskController();
             var TaskId = taskManagerEntities.Tasks.Max(x => x.Task_Id);
 
             var result = controller.GetTaskbyId(TaskId);
@@ -73,16 +74,18 @@ namespace TaskManager.API.Tests.Controller
             var TaskId = taskManagerEntities.Tasks.Max(x => x.Task_Id);
             TaskManager.DataLayer.Task task = new TaskManager.DataLayer.Task();
             task.Task_Id = TaskId;
-            task.Task1 = "Updated Test Task";
+            task.Name = "Updated Test Task";
             task.Parent_Id = 0;
             task.Priority = 14;
             task.Start_Date = Convert.ToDateTime("01-02-2018");
             task.Start_Date = Convert.ToDateTime("04-02-2018");
+            task.User_Id = 1;
+            task.Project_Id = 1;
 
-            TaskManagerAPIController controller = new TaskManagerAPIController();
+            TaskController controller = new TaskController();
             controller.Update(task);
 
-            var result = controller.GetTasks().Where(x => x.TaskId == TaskId).FirstOrDefault();
+            var result = controller.GetTaskDetails().Where(x => x.TaskId == TaskId).FirstOrDefault();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(result.Task, "Updated Test Task");
@@ -95,8 +98,8 @@ namespace TaskManager.API.Tests.Controller
             TaskManagerEntities taskManagerEntities = new TaskManagerEntities();
             var TaskId = taskManagerEntities.Tasks.Max(x => x.Task_Id);
 
-            TaskManagerAPIController controller = new TaskManagerAPIController();
-            var result = controller.GetParentTask(TaskId).FirstOrDefault(x => x.TaskId == TaskId);
+            TaskController controller = new TaskController();
+            var result = controller.GetTasks(TaskId).FirstOrDefault(x => x.TaskId == TaskId);
 
             Assert.IsNull(result);
 
@@ -108,8 +111,8 @@ namespace TaskManager.API.Tests.Controller
             TaskManagerEntities taskManagerEntities = new TaskManagerEntities();
             var TaskId = taskManagerEntities.Tasks.Max(x => x.Task_Id);
 
-            TaskManagerAPIController controller = new TaskManagerAPIController();
-            var result = controller.GetParentTask(0).FirstOrDefault(x => x.TaskId == TaskId);
+            TaskController controller = new TaskController();
+            var result = controller.GetTasks(0).FirstOrDefault(x => x.TaskId == TaskId);
 
             Assert.IsNotNull(result);
 
@@ -121,12 +124,12 @@ namespace TaskManager.API.Tests.Controller
 
             TaskManagerEntities taskManagerEntities = new TaskManagerEntities();
             var TaskId = taskManagerEntities.Tasks.Max(x => x.Task_Id);
-            
 
-            TaskManagerAPIController controller = new TaskManagerAPIController();
+
+            TaskController controller = new TaskController();
             controller.UpdateEditFlag(TaskId, false);
 
-            var result = controller.GetTasks().Where(x => x.TaskId == TaskId).FirstOrDefault();
+            var result = controller.GetTaskDetails().Where(x => x.TaskId == TaskId).FirstOrDefault();
 
             
             Assert.AreEqual(result.EditFlag, false);

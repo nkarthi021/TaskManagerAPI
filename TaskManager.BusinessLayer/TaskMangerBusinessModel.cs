@@ -25,10 +25,10 @@ namespace TaskManager.BusinessLayer
                                select new TaskDetails {
                                    TaskId = task.Task_Id,
                                    Task = task.Name,
-                                   ParentTask = parenttask.Name != null ? parenttask.Name : "",
-                                   Priority = task.Parent_Id !=null ? parenttask.Priority : task.Priority,
-                                   StartDate = task.Parent_Id != null ? task.Start_Date.ToString() : task.Start_Date.ToString(),
-                                   EndDate = task.Parent_Id != null ? task.End_Date.ToString() : task.End_Date.ToString(),
+                                   ParentTask = task.Parent_Id != 0 ? parenttask.Name : "",
+                                   Priority = task.Parent_Id != 0 ? parenttask.Priority : task.Priority,
+                                   StartDate = task.Parent_Id != 0 ? parenttask.Start_Date.ToString() : task.Start_Date.ToString(),
+                                   EndDate = task.Parent_Id != 0 ? parenttask.End_Date.ToString() : task.End_Date.ToString(),
                                    EditFlag = task.Edit_Flag,
                                    Project = projects.Name,
                                    User = users.First_Name
@@ -90,7 +90,7 @@ namespace TaskManager.BusinessLayer
             UpdatedTasks.Priority = task.Priority;
             UpdatedTasks.Start_Date = task.Start_Date;
             UpdatedTasks.End_Date = task.End_Date;
-            UpdatedTasks.User_Id = task.Project_Id;
+            UpdatedTasks.User_Id = task.User_Id;
             UpdatedTasks.Project_Id = task.Project_Id;
 
             taskmanagerEntities.SaveChanges();
